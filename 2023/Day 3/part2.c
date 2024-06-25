@@ -16,26 +16,19 @@ int main()
         return 1;
     }
     
-    char array[150][150];
-    memset(array, '\0', 140*141);
+    char *array[150];
 
-    char c;
     int x = 0;
     int y = 0;
 
-    while((c = fgetc(fp)) != EOF)
+    char buffer[256];
+
+    while(fgets(buffer, 256, fp) != NULL)
     {
-        if(c == '\n')
-        {
-            array[y][x] = '\0';
-            y++;
-            x = 0;
-        }
-        else
-        {
-            array[y][x] = c;
-            x++;
-        }
+        array[x] = malloc(sizeof(char) * (strlen(buffer) + 1));
+        strcpy(array[x], buffer);
+        array[x][strlen(buffer)] = '\0';
+        x++;
     }
 
     int starArray[150][150];
@@ -379,14 +372,16 @@ int main()
                 }
 
                 result += num1*num2;
-
-                printf("* on x: %d y: %d with num1: %d, num2: %d\n", y+ 1, x, num1, num2);
-
             }
         }
     }
 
     printf("%d\n", result);
+
+    for (int i = 0; i < 150; i++)
+    {
+        free(array[i]);
+    }
 
     fclose(fp);
     return 0;

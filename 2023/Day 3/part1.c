@@ -16,31 +16,23 @@ int main()
         return 1;
     }
     
-    char array[150][150];
-    memset(array, '\0', 140*141);
+    char *array[150];
 
-    char c;
     int x = 0;
-    int y = 0;
 
-    while((c = fgetc(fp)) != EOF)
+    char buffer[256];
+
+    while(fgets(buffer, 256, fp) != NULL)
     {
-        if(c == '\n')
-        {
-            array[y][x] = '\0';
-            y++;
-            x = 0;
-        }
-        else
-        {
-            array[y][x] = c;
-            x++;
-        }
+        array[x] = malloc(sizeof(char) * (strlen(buffer) + 1));
+        strcpy(array[x], buffer);
+        array[x][strlen(buffer)] = '\0';
+        x++;
     }
 
     int result = 0;
     
-    y = 0;
+    int y = 0;
     while (y <= LAST_LINE)
     {
         for (x = 0; array[y][x] != '\0'; x++)
@@ -145,6 +137,12 @@ int main()
         y++;
     }
     printf("%d\n", result);
+
+    for (int i = 0; i < LAST_LINE; i++)
+    {
+        free(array[i]);
+    }
+
 
     fclose(fp);
     return 0;
